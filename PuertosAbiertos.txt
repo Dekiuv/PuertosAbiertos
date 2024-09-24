@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# Pedir IP
+echo "Bash1 -> 10.0.24.2"
+echo "Bash2 -> 10.0.24.3"
+echo -n "Selecciona la IP a la que se quiere conectar:"
+read ip
+
+# Puerto inicial
+echo -n "Selecciona el puerto inicial:"
+read puertoinicial
+
+# Puerto final
+echo -n "Selecciona el puerto final:"
+read puertofinal
+
+# Variables fecha y hora
+fecha=$(date "+%d-%m-%y")
+hora=$(date "+%d-%m-%y %H:%M:%S")
+
+# Bucle para una secuencia de los puertos que hemos dicho
+for i in $(seq $puertoinicial $puertofinal)
+do
+# nc se hace un netcat, la -z escanea la conexion sin enviar datos de la variable $ip del bucle $i
+nc-z $ip $i
+#Si el puerto esta abierto, la variable $? sera 0
+if [ $? -eq 0 ]
+then
+#Mostramos la fecha, avisamos que el puerto esta abierto y mandamos la información al archivo
+#que hagamos puesto en la variable $archivo
+echo "[$hora] [Escaneo del puerto $puertoinicial al $puertofinal] Puerto $i de la maquina $ip esta abierto" >> $fecha
+fi
+done
+#Indicamos al usuario que se acaba el escaeno
+echo "Escaneo de puertos completo"
